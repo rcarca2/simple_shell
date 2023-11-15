@@ -3,6 +3,7 @@
 
 # Object files
 *.o
+*.c
 *.ko
 *.obj
 *.elf
@@ -50,6 +51,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+betty_report
 
-#emacs
-.ccls-cache/
+#executable
