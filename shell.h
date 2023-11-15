@@ -1,36 +1,163 @@
-#ifndef SHELL_H
-#define SHELL_H
-#include <stdio.h>
-#include <unistd.h>
+#ifndef BUILTINS_H
+#define BUILTINS_H
+
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
-#include <signal.h>
-#include <stdbool.h>
-#define MAX_C 10
-/**
- * struct denum - structure that contains vars
- * @cnt: lines cnt
- */
-typedef struct denum
-{
-	int cnt;
-} denum;
-void prompt(char **arv, char **envp, bool flg);
-int _strcmp(char *s1, char *s2);
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+
+void start_prompt(general_t *info);
+void prompt(general_t *info);
+char *read_prompt();
+void sigintHandler(int sig_num);
+
+/* utils_text.c */
+int _strlen(char *msg);
 char *_strcat(char *dest, char *src);
-char *handle_path(char **rgv, char *cmd);
 char *_strcpy(char *dest, char *src);
-int _strlen(char *s);
-void handle_exit(char *cmd);
-void runcmd(char **rgv, char **arv, char **envp);
-char *trim(char *cmd);
-char *_strncpy(char *dest, char *src, int n);
-char *get_path(char *cmd);
-char *_getenv(char *name);
-char **tokenize_env(char *path);
+char *_strdup(char *str);
+int _strcmp(char *str1, char *str2);
+
+/* utils_text2.c */
+char *to_string(int number);
+int is_numerical(unsigned int n);
+int _atoi(char *s);
+int contains_letter(char *s);
+
+/* printers.c */
+int _putchar_to_fd(char l, int fd);
+int print_to_fd(char *msg, int fd);
+
+/* printers_out.c */
+int _putchar(char c);
+int print(char *msg);
+
+/* printers_err.c */
+int print_err(char *msg);
+
+/* tokenization.c */
+char **split_words(char *line, const char *sep);
+char *join_words(char *word1, char *word2, char *word3, const char *sep);
+
+/* patterns.c */
+void analyze_patterns(general_t *info, char **arguments);
+char *pattern_handler(general_t *info, char *string);
+char *replace_value(general_t *info, int *index, char *string);
+
+/* patterns_replacer.c */
+char *replacement(general_t *info, int *index, char *string);
+char *replace_env(general_t *info, char *environment);
+
+/* memory.c */
+void *_realloc(void *ptr, size_t old_size, size_t new_size);
+
+/* free.c */
+void free_memory_p(void *ptr);
+void free_memory_pp(void **ptr);
+
+/* Entry point of the shell */
+void start(general_t *info);
+
+#ifndef GENERAL_H
+#define GENERAL_H
+
+#define _TRUE            1
+#define _FALSE           0
+
+#define STDIN            0
+#define STDOUT           1
+#define STDERR           2
+
+#define NON_INTERACTIVE  0
+#define INTERACTIVE      1
+
+#define PERMISSIONS      1
+#define NON_PERMISSIONS -1
+
+#define _FILE            10
+#define NON_FILE         -10
+
+#define _ENOENT          "No such file or directory"
+#define _EACCES          "Permission denied"
+#define _CMD_NOT_EXISTS  "not found"
+#define _ILLEGAL_NUMBER  "Illegal number"
+
+#define _CODE_ENOENT           3
+#define _CODE_EACCES           13
+#define _CODE_CMD_NOT_EXISTS   132
+#define _CODE_ILLEGAL_NUMBER   133
+typedef struct __attribute__((__packed__))
+{
+	int argc;                 /* Number of arguments received */
+	char **argv;              /* Arguments received */
+	int mode;                 /* INTERACTIVE or NON_INTERACTIVE */
+	int error_code;           /* Error code for error message */
+	char *command;            /* Command to execute */
+	int n_commands;           /* Number of commands executed */
+	char *value_path;         /* Path of a command */
+	int is_current_path;      /* Check if is current path or not */
+	int status_code;          /* Last exit code */
+	char *buffer;             /* Line readed with the getline */
+	char **arguments;         /* Line splited into words */
+	char *environment;        /* Last environment variable get it */
+	int pid;                  /* Process id */
+} general_t;
+
+typedef struct __attribute__((__packed__))
+{
+	char *message;            /* Error message */
+	int code;                 /* Error code for identify the error message */
+} error_t;
+
+typedef struct __attribute__((__packed__))
+{
+	char *command;            /* arguments[0] = cmd */
+	void (*func)(general_t *info, char **arguments);
+} builtin_t;
+
+
+/* error.c */
+char *message_selector(general_t info);
+void error(general_t *info);
+void error_extra(general_t *info, char *extra);
+
 extern char **environ;
-/*void geterror(int cnt, char **arv, char *cmd);*/
-void geterror(denum *n, char **arv, char *cmd);
-/*void search_path(char **rgv, char *cmd, char **envp);*/
-#endif
+
+/* commands.c */
+void analyze(char **arguments, general_t *info, char *buff);
+
+/* permissions.c */
+int is_executable(char *filename);
+int is_file(char *command);
+
+/* environment.c */
+char *_getenv(const char *name);
+char *which(char *filename, general_t *info);
+void is_current_path(char *path, general_t *info);
+void get_full_env(void);
+
+/* execute.c */
+void execute(char *commands, char **arguments, general_t *info, char *buff);
+int current_directory(char *cmd, char **arguments, char *buff,
+		general_t *info);
+
+/* builtins.c */
+int builtins(general_t *info, char **arguments);
+int check_builtin(general_t *info, char **arguments);
+
+/* exit.c */
+void bin_exit(general_t *info, char **arguments);
+int number_controller(general_t *info, char *number);
+
+/* env.c */
+void bin_env(general_t *info, char **arguments);
+
+/* echo.c */
+void bin_echo(general_t *info, char **arguments);
+void echo_printer(int index, char *text, char **arguments);
+
+#endif /* BUILTINS_H */
