@@ -27,6 +27,10 @@ void set_info(info_t *info, char **av)
 		info->argv = strtow(info->arg, " \t");
 		if (!info->argv)
 		{
+<<<<<<< HEAD
+=======
+
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
 			info->argv = malloc(sizeof(char *) * 2);
 			if (info->argv)
 			{

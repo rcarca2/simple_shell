@@ -61,7 +61,11 @@ ssize_t get_input(info_t *info)
 	r = input_buf(info, &buf, &len);
 	if (r == -1) /* EOF */
 		return (-1);
+<<<<<<< HEAD
 	if (len) /* we have commands left in the chain buffer */
+=======
+	if (len)	/* we have commands left in the chain buffer */
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
 	{
 		j = i; /* init new iterator to current buf position */
 		p = buf + i; /* get pointer for return */

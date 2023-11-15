@@ -46,8 +46,13 @@ char *_strdup(const char *str)
 }
 
 /**
+<<<<<<< HEAD
  * _puts - prints an input string
  * @str: the string to be printed
+=======
+ *_puts - prints an input string
+ *@str: the string to be printed
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
  *
  * Return: Nothing
  */
