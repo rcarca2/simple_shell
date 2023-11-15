@@ -117,20 +117,32 @@ int replace_vars(info_t *info)
 		if (!_strcmp(info->argv[i], "$?"))
 		{
 			replace_string(&(info->argv[i]),
+<<<<<<< HEAD
+					_strdup(convert_number(info->status, 10, 0)));
+=======
 				_strdup(convert_number(info->status, 10, 0)));
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
 			continue;
 		}
 		if (!_strcmp(info->argv[i], "$$"))
 		{
 			replace_string(&(info->argv[i]),
+<<<<<<< HEAD
+					_strdup(convert_number(getpid(), 10, 0)));
+=======
 				_strdup(convert_number(getpid(), 10, 0)));
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
 			continue;
 		}
 		node = node_starts_with(info->env, &info->argv[i][1], '=');
 		if (node)
 		{
 			replace_string(&(info->argv[i]),
+<<<<<<< HEAD
+					_strdup(_strchr(node->str, '=') + 1));
+=======
 				_strdup(_strchr(node->str, '=') + 1));
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
 			continue;
 		}
 		replace_string(&info->argv[i], _strdup(""));

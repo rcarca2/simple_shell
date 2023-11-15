@@ -1,11 +1,19 @@
 #include "shell.h"
 
 /**
+<<<<<<< HEAD
+ * _memset - fills memory with a constant byte
+ * @s: the pointer to the memory area
+ * @b: the byte to fill *s with
+ * @n: the amount of bytes to be filled
+ * Return: (s) a pointer to the memory area s
+=======
  **_memset - fills memory with a constant byte
  *@s: the pointer to the memory area
  *@b: the byte to fill *s with
  *@n: the amount of bytes to be filled
  *Return: (s) a pointer to the memory area s
+>>>>>>> b4f0b738420717666b4860f14d3974456abfb091
  */
 char *_memset(char *s, char b, unsigned int n)
 {
